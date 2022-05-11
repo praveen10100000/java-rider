@@ -1,5 +1,6 @@
 package com.codewithpp.JavaDriver.entity;
 
+import com.codewithpp.JavaDriver.otp.OtpDetails;
 import com.codewithpp.JavaDriver.util.RideStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Ride {
     private int userId;
     private RideStatus status = RideStatus.Initiate;
     private double distance;
+//    private OtpDetails
 
     @ManyToOne
     @JoinColumn(name = "driver_id", referencedColumnName = "id")
