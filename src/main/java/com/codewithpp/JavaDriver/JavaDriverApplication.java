@@ -7,11 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class JavaDriverApplication {
 
-	@Value("${spring.datasource.url}")
-	static
-	String db;
 	public static void main(String[] args) {
 		SpringApplication.run(JavaDriverApplication.class, args);
+
 	}
 
 }

@@ -39,13 +39,13 @@ public class DriverController {
     public static Map<String, Object> otpInCache = new HashMap<>();
 
 
-    @RequestMapping()
+    @RequestMapping("")
     public String normalMessage() {
         return "welcome";
     }
 
     @PostMapping("/register")
-    public String registerAsCaptain(@RequestBody Driver driver) throws IOException {
+    public String registerAsCaptain(@RequestBody Driver driver){
         log.info(driver.toString());
         if (driverRepo.existsByPhoneNumber(driver.getPhoneNumber()) == true) return "PhoneNumber is Already Exists";
         else {
@@ -56,6 +56,7 @@ public class DriverController {
 
             ExecutorService executor = Executors.newCachedThreadPool();
             executor.submit(() -> {
+                System.out.println("data is everywhere");
                 sendOtp(String.valueOf(otpDetails.getOtp()), driver1.getName(), driver1.getEmail());
             });
             executor.shutdown();
@@ -111,27 +112,24 @@ public class DriverController {
 
     public void sendOtp(String otp, String name, String email) {
         FileReader fr = null;
-        try {
-            fr = new FileReader("C:\\Users\\HashStudioz\\Downloads\\JavaDriver\\JavaDriver\\src\\main" + "\\java\\com\\codewithpp\\JavaDriver\\util\\emailTemplate.html");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        BufferedReader br = new BufferedReader(fr);  //creates a buffering character input stream
-        StringBuffer sb = new StringBuffer();    //constructs a string buffer with no characters
         String line;
-        while (true) {
-            try {
-                if (!((line = br.readLine()) != null)) break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            sb.append(line);      //appends line to string buffer
-            sb.append("\n");     //line feed
-        }
+        StringBuffer sb = new StringBuffer();   //constructs a string buffer with no characters
         try {
+            fr = new FileReader("C:\\Users\\HashStudioz\\Downloads\\JavaDriver\\JavaDriver\\src\\main\\java\\com\\codewithpp\\JavaDriver\\util\\emailTemplate.html");
+            BufferedReader br = new BufferedReader(fr);  //creates a buffering character input stream
+            while (true) {
+                try {
+                    if (!((line = br.readLine()) != null)) break;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println(line.toString()+" lines");
+                sb.append(line);      //appends line to string buffer
+                sb.append("\n");     //line feed
+            }
             fr.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            sb.append("hello {{name}} your otp is {{otp}}");
         }
 
         int i = sb.indexOf("{{otp}}");
@@ -172,8 +170,6 @@ public class DriverController {
         double fair = 30 ;
         fair += ((distance - 3) * 11);
         return fair ;
-
-
     }
 
 
